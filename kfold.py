@@ -113,8 +113,14 @@ def evaluate_accuracy(y_true: np.ndarray, y_pred: np.ndarray) -> float:
     Returns:
         float: Accuracy score.
     """
-    # TODO: implement accuracy score
-    raise NotImplementedError
+
+    correct = (y_true == y_pred).sum()  # number of correct predictions
+    
+    total = y_true.shape[0] # total number of target values
+    
+    accuracy = correct / total # accuracy as a ratio of correct predictions
+    
+    return accuracy
 
 
 def main() -> None:
