@@ -141,10 +141,10 @@ def main() -> None:
     y_test = testing_data.iloc[:, 0].values
     print("Test data:", X_test.shape, y_test.shape)
 
-    k = 1  # NOTE: not the best choice for k
+    k = 4  # NOTE: not the best choice for k
     print(f" KNN with k = {k}")
 
-    num_folds = 5
+    num_folds = 10
     # Perform k-fold cross-validation
     for X_train, y_train, X_val, y_val in kfold_cross_validation(X, y, k=num_folds):
         model = KNN(k=k)
@@ -153,7 +153,27 @@ def main() -> None:
         accuracy = evaluate_accuracy(y_val, y_pred)
         print(f"Accuracy: {round(accuracy, 2)}")
 
-    # TODO: compute accuracy on test data and compare results with cross-validation scores
+    k_values = [3, 4, 5, 6, 7, 9, 10, 15, 20, 21, 40, 41]
+    print("\nAccuracy on the TEST set for different k:")
+    results = []
+
+    for k_ in k_values:
+        # Create and train the model on the entire available TRAIN sample (X, y)
+        model = KNN(k=k_)
+        model.fit(X, y)
+
+        # Predicting on the TEST set (X_test)
+        y_pred_test = model.predict(X_test)
+
+        # Calculating accuracy on the test set
+        test_accuracy = evaluate_accuracy(y_test, y_pred_test)
+        results.append((k_, test_accuracy))
+
+    print("\n--- Final Results Table ---")
+    print("k | Test Accuracy")
+    print("---|---------")
+    for k_, acc in results:
+        print(f"{k_} | {acc:.3f}")
 
 
 if __name__ == "__main__":
